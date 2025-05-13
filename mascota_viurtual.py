@@ -44,8 +44,34 @@ import random
 +----------------------------+
 """
 
-def obj_mascota(estados, dueno, trucos): 
-    nombre = {"nombre" : "Pepa"}
+def obj_mascota(estados, dueno, trucos, nombre_mascota): 
+    nombre = {"nombre" : nombre_mascota}
+
+    atributos = {
+        "nombre" : nombre["nombre"],
+        "estado" : estados,
+        "trucos" : trucos,
+        "duenio" : dueno
+    }
+
+    acciones = {
+        "ac" : "alimentar",
+        "ac1" : "jugar",
+        "ac2" : "dormir"  
+    }
+
+    objeto_mascota = {
+        "nombre" : nombre,
+        "atributos" : atributos,
+        "acciones" : acciones
+    }
+
+    return objeto_mascota
+
+#-----------------------------------------------------------------------
+
+def obj_mascota_2(estados, dueno, trucos, nombre_mascota): 
+    nombre = {"nombre" : nombre_mascota}
 
     atributos = {
         "nombre" : nombre["nombre"],
@@ -82,7 +108,7 @@ def obj_estado()-> dict:
 
     acciones = {
         "hambre" : "alimentarla",
-        "sueno" : "dormirla",
+        "sueno" : "dormir",
         "sed" : "darle de tomar"
     }
 
@@ -162,22 +188,46 @@ def estado_actual(accion, estados, nuevo_estado):
 def main(): 
     nombre = input("Ingrese su nombre: ")
     nombre_mascota = input("Ingrese el nombre del perro: ")
+    nombre_mascota_2 = input("Ingrese el nombre del gato: ")
     logros = 0
     estados = obj_estado() 
     trucos = obj_trucos(nombre_mascota)
-    mascota = obj_mascota(estados["atributos"], nombre, trucos["acciones"])
+    mascota = obj_mascota(estados["atributos"], nombre, trucos["acciones"], nombre_mascota)
+    mascota_2 = obj_mascota_2(estados["atributos"], nombre, trucos["acciones"], nombre_mascota_2)
     juego = input("quieres empezar: ") 
-    while juego == "si": 
-        nuevo_estado = seleccionar_estado(mascota["atributos"]["estado"]) 
-        print(f"El estado del bicho es este: {nuevo_estado} \n Desea: alimentarla, dormir o darle de tomar ?") 
-        accion = input("Ingrese la accion: ") 
-        estado_de_mascota = estado_actual(accion, estados, nuevo_estado) 
-        print(f"El estado de tu mascota es: {estado_de_mascota}") 
-        if estado_de_mascota == estados["atributos"]["mejora"]:
-            truco = seleccionar_truco(trucos["acciones"])
+    while juego == "si":
+         
+        nuevo_estado_1 = seleccionar_estado(mascota["atributos"]["estado"]) 
+        print(f"El estado del perro es este: {nuevo_estado_1} \n Desea: alimentarla, dormir o darle de tomar ?") 
+        accion_1 = input("Ingrese la accion: ") 
+        estado_de_mascota_1 = estado_actual(accion_1, estados, nuevo_estado_1) 
+        print(f"El estado de tu perro es: {estado_de_mascota_1}") 
+        
+        if estado_de_mascota_1 == estados["atributos"]["mejora"]:
+            truco_1 = seleccionar_truco(trucos["acciones"])
             logros += 1
-            print(f"¡Conseguiste un logro! \n Asi que tu perro festejo haciendo un truco: {truco}")
+            print(f"¡Conseguiste un logro! \n Asi que tu perro festejo haciendo un truco: {truco_1}")
+            
+        nuevo_estado_2 = seleccionar_estado(mascota_2["atributos"]["estado"])
+        print(f"El estado del gato es este: {nuevo_estado_2} \n Desea: alimentarla, dormir o darle de tomar ?")
+        accion_2 = input("Ingrese la accion: ")  
+        estado_de_mascota_2 = estado_actual(accion_2, estados, nuevo_estado_2) 
+        print(f"El estado de tu gato es: {estado_de_mascota_2}") 
+        
+        if estado_de_mascota_2 == estados["atributos"]["mejora"]:
+            truco_2 = seleccionar_truco(trucos["acciones"])
+            logros += 1
+            print(f"¡Conseguiste un logro! \n Asi que tu gato festejo haciendo un truco: {truco_2}")
+
+        
+        if estado_de_mascota_2 == "Insatisfecho" and estado_de_mascota_1 == "Insatisfecho":
+            print(f"{nombre_mascota} esta peleando contra {nombre_mascota_2}")
+            
+        elif estado_de_mascota_1 == "Insatisfecho" or estado_de_mascota_2 == "Insatisfecho":
+            print(f"{nombre_mascota} esta peleando contra {nombre_mascota_2}")
+            
         juego = input("Quieres continuar: ")
+        
     print(f"Tu cantidad de logros fue de: {logros}")
 
 main()
